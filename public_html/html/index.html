@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html >
+    <head>
+        <title>Angular Golf Card</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+        <link rel='stylesheet' href='../css/stylesheet.css'>
+    </head>
+    <body ng-app="scoreCard" >
+        <div class='jumbotron col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1' ng-controller="GameController">
+            <div ng-show='currentHole === 0'>
+                <header  id='mainMenu' class='jumbotron col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                    <div  class='row col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                        <h1 class='col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 ' style='text-align: center;'>Welcome to Mario Golf</h1>
+                    </div>
+                    <div class='row col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                        <h6 class='col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3' style='text-align: center;'>Select your Players</h6>
+                    </div>
+
+                    <section id='gameArea'>  
+                        <div>
+                            <input ng-model='city'>
+                            <button ng-click='updateCourses(city)'>get City Info</button>
+
+                            <select ng-model='theCourseId'>
+                                <option ng-repeat='course in courses' ng-value = '{{course.id}}'>{{course.name}}</option>
+                            </select>
+                            <button ng-click = 'selectCourse(theCourseId)'>Select Course</button>
+
+                        </div>
+                        <div class='row col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                            <input type='number' ng-model='numPlayers'>
+
+                        </div>
+                        <div class='row col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                            <button  ng-click='playGame()' id='startGame'>Start Game</button>
+                        </div>
+                    </section>
+
+                </header>
+                <div>
+                    <h1>{{title}}</h1>
+                    <h2>{{totalHoles}}</h2>
+                    <h2>{{players}}</h2>
+                </div>
+                <div ng-class="{'pro': player.skillLevel === 'pro', 'champion': player.skillLevel === 'champion', 'men': player.skillLevel === 'men', 'women': player.skillLevel === 'women'}" ng-repeat='player in players'>
+                    <select ng-model = 'player.skillLevel'>
+                        <option ng-repeat='skills in holeInfo[0].tee_boxes' ng-value = 'skills.tee_type' ng-if="skills.tee_type !=='auto change location'">{{skills.tee_type}}</option>
+                    </select>
+                    <select ng-if ="player.icon === ''" ng-model='player.icon'>
+                        <option ng-repeat='image in images' ng-value='image.icon'>{{image.name}}</option>
+                    </select>
+                    <div ng-show="player.icon !==''">
+                        <img ng-src={{player.icon}} class="icon">
+                    </div>
+                    <input ng-model='player.name'>
+                </div>
+                <button ng-click='currentHole = currentHole + 1'> Go to Next Hole</button>
+            </div>
+            <section>
+                <div ng-repeat='hole in holeInfo' ng-show='$parent.currentHole <= totalHoles && $parent.currentHole === $index + 1'>
+                    <div>
+                        <div>
+                            <h1>Hole {{currentHole}}</h1>
+                            <div>
+                                
+                            </div>
+                        </div>
+                        <div ng-class="{'pro': player.skillLevel === 'pro', 'champion': player.skillLevel === 'champion', 'men': player.skillLevel === 'men', 'women': player.skillLevel === 'women'}" ng-repeat='player in players'>
+                            <div ng-class="{'pro': player.skillLevel === pro}">
+                                <p>{{player.name}}</p>
+                                <img ng-src={{player.icon}} class="icon">
+                                <input ng-model='player.score[$parent.$index]'>
+                            </div>
+
+                        </div>
+                        <div ng-if='totalHoles > 9 && $parent.currentHole === 9' >
+                            <div ng-repeat="player in players">
+                            <h2>In Score</h2>
+                            <p>{{player.name}}</p>
+                            <p>{{player.playerScore}}</p>
+                            </div>
+                        </div>
+
+                        <button ng-click= '$parent.currentHole = $index; addScores();'>Go to Previous Hole</button>
+                        <button ng-click= '$parent.currentHole = $index + 2; addScores();'>Go to Next Hole</button>
+
+                    </div>
+                </div>
+            </section> 
+            <div ng-show='currentHole > totalHoles'>
+                <div ng-repeat='player in players'>
+                    <p>{{player.name}}</p>
+                    <p>{{player.playerScore}}</p>
+                </div>
+                <button ng-click= 'currentHole = currentHole - 1'>Go to Previous Hole</button>
+            </div>
+            <footer></footer>
+        </div>
+        <script src='../js/module.js'></script>
+        <script src="../js/Controllers/app.js"></script>
+        <script src='../js/Services/API Calls.js'></script>
+    </body>
+</html>

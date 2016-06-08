@@ -1,0 +1,38 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 27, 2016, 2:26:37 PM
+    Author     : lhendricks
+*/
+
+.jumbotron {
+    text-align: center;
+}
+
+#mainMenu {
+   background: rgba(200, 200, 200, 0.5)
+}
+
+.icon {
+    max-height: 50px;
+    max-width: 50px;
+}
+
+.pro{
+    background-color: #000000;
+}
+
+.champion {
+    background-color: #0000ff;
+}
+
+.women {
+    background-color: #ff0000;
+}
+
+.men {
+    background-color: #ffffff;
+}
